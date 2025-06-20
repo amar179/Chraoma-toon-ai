@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chroma AI Toon</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+    textarea {
+      width: 90%;
+      height: 100px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      padding: 10px;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+    }
+    #videoPreview {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 480px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎨 Chroma AI Toon</h1>
+  <p>नीचे टेक्स्ट लिखें, कैरेक्टर और आवाज़ चुनें, और वीडियो जनरेट करें!</p>
+
+  <textarea id="textInput" placeholder="यहाँ अपना टेक्स्ट लिखें..."></textarea><br/>
+
+  <select id="character">
+    <option value="2d">2D कैरेक्टर</option>
+    <option value="3d">3D कैरेक्टर</option>
+  </select>
+
+  <select id="voice">
+    <option value="male">Male Voice</option>
+    <option value="female">Female Voice</option>
+  </select><br/>
+
+  <button onclick="generateVideo()">🎬 वीडियो जनरेट करें</button>
+
+  <div id="output">
+    <p id="status"></p>
+    <video id="videoPreview" controls style="display:none;">
+      <source id="videoSource" src="" type="video/mp4">
+      आपका ब्राउज़र वीडियो सपोर्ट नहीं करता।
+    </video>
+  </div>
+
+  <script>
+    function generateVideo() {
+      const text = document.getElementById('textInput').value;
+      const voice = document.getElementById('voice').value;
+      const character = document.getElementById('character').value;
+      const status = document.getElementById('status');
+      const video = document.getElementById('videoPreview');
+      const videoSource = document.getElementById('videoSource');
+
+      if (!text) {
+        alert("कृपया कुछ टेक्स्ट लिखें!");
+        return;
+      }
+
+      // Set demo video source based on character
+      if (character === '2d') {
+        videoSource.src = "https://www.w3schools.com/html/mov_bbb.mp4"; // Demo 2D video
+      } else {
+        videoSource.src = "https://www.w3schools.com/html/movie.mp4"; // Demo 3D video
+      }
+
+      video.style.display = 'block';
+      video.load();
+
+      // Text-to-Speech (Browser API)
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.lang = 'hi-IN';
+
+      if (voice === 'male') {
+        msg.pitch = 1;
+        msg.rate = 1;
+      } else {
+        msg.pitch = 1.6;
+        msg.rate = 1.1;
+      }
+
+      status.innerText = "🎤 आवाज़ जनरेट हो रही है...";
+      speechSynthesis.speak(msg);
+      msg.onend = () => {
+        status.innerText = "✅ वीडियो और आवाज़ तैयार है!";
+      };
+    }
+  </script>
+</body>
+</html>
